@@ -140,3 +140,34 @@ order by passagens.valor desc
 
 
 -- Etapa 4: Views — Visões de Negócio
+
+-- V1
+create VIEW  vw_painel_aeroporto AS
+select
+	v.numero_voo,
+	v.data_hora,
+	v.origem,
+	v.destino,
+	a.modelo,
+	a.codigo_cauda,
+	v.status
+from
+	voos v
+join aeronaves a on v.aeronave_id = a.id
+
+-- V2
+CREATE VIEW vw_faturamento_por_voo AS
+SELECT 
+    v.id AS voo_id,
+    v.numero_voo,
+    v.destino,
+    COUNT(p.id) AS total_passageiros,
+    SUM(p.valor) AS receita_total
+FROM 
+    voos v
+JOIN 
+    passagens p ON v.id = p.voo_id
+GROUP BY 
+    v.id, 
+    v.numero_voo, 
+    v.destino
